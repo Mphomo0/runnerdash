@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   createRunnerFeeTier,
   deleteRunnerFeeTier,
+  updateRunnerFeeTier,
 } from "@/app/actions/settings";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Pencil, Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Tier {
@@ -29,6 +30,12 @@ interface Tier {
 export function TierList({ initialTiers }: { initialTiers: Tier[] }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editData, setEditData] = useState({
+    minItems: 0,
+    maxItems: 0,
+    feeAmount: 0,
+  });
   const [newTier, setNewTier] = useState({
     minItems: "",
     maxItems: "",
@@ -63,6 +70,32 @@ export function TierList({ initialTiers }: { initialTiers: Tier[] }) {
     }
   };
 
+  const handleEdit = (tier: Tier) => {
+    setEditingId(tier.id);
+    setEditData({
+      minItems: tier.minItems,
+      maxItems: tier.maxItems,
+      feeAmount: tier.feeAmount,
+    });
+  };
+
+  const handleSave = async (id: string) => {
+    setLoading(true);
+    try {
+      await updateRunnerFeeTier(id, editData);
+      setEditingId(null);
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingId(null);
+  };
+
   return (
     <div className="grid gap-8 md:grid-cols-2">
       <Card>
@@ -82,19 +115,100 @@ export function TierList({ initialTiers }: { initialTiers: Tier[] }) {
             <TableBody>
               {initialTiers.map((tier) => (
                 <TableRow key={tier.id}>
-                  <TableCell>{tier.minItems}</TableCell>
-                  <TableCell>{tier.maxItems}</TableCell>
-                  <TableCell>R{tier.feeAmount.toFixed(2)}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(tier.id)}
-                      className="text-red-500 hover:text-red-700 hover:bg-red-100"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
+                  {editingId === tier.id ? (
+                    <>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          min="0"
+                          value={editData.minItems}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              minItems: parseInt(e.target.value),
+                            })
+                          }
+                          className="w-20"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          min="0"
+                          value={editData.maxItems}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              maxItems: parseInt(e.target.value),
+                            })
+                          }
+                          className="w-20"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={editData.feeAmount}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              feeAmount: parseFloat(e.target.value),
+                            })
+                          }
+                          className="w-24"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleSave(tier.id)}
+                            disabled={loading}
+                            className="text-green-500 hover:text-green-700"
+                          >
+                            <Check className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleCancel}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </>
+                  ) : (
+                    <>
+                      <TableCell>{tier.minItems}</TableCell>
+                      <TableCell>{tier.maxItems}</TableCell>
+                      <TableCell>R{tier.feeAmount.toFixed(2)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEdit(tier)}
+                            className="text-blue-500 hover:text-blue-700"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDelete(tier.id)}
+                            className="text-red-500 hover:text-red-700 hover:bg-red-100"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </>
+                  )}
                 </TableRow>
               ))}
               {initialTiers.length === 0 && (
