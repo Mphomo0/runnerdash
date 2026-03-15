@@ -1,9 +1,10 @@
-import { getDashboardStats, getRecentOrders } from "@/app/actions/dashboard"
+import { getDashboardStats, getRecentOrders } from "@/app/actions/dashboard";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-import Link from "next/link"
-import { format } from "date-fns"
+import Link from "next/link";
+import { format } from "date-fns";
 import {
   Package,
   ShoppingCart,
@@ -11,24 +12,24 @@ import {
   Plus,
   Settings2,
   TrendingUp,
-} from "lucide-react"
-import { RevenuePeriodSelector } from "@/components/dashboard/revenue-period-selector"
+} from "lucide-react";
+import { RevenuePeriodSelector } from "@/components/dashboard/revenue-period-selector";
 
 // ── Status Badge ─────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    COMPLETED: 'badge-success',
-    PENDING: 'badge-warning',
-    CANCELLED: 'badge-danger',
-  }
+    COMPLETED: "badge-success",
+    PENDING: "badge-warning",
+    CANCELLED: "badge-danger",
+  };
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-sm ${map[status] ?? 'badge-default'}`}
-      style={{ fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}
+      className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-sm ${map[status] ?? "badge-default"}`}
+      style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}
     >
       {status}
     </span>
-  )
+  );
 }
 
 // ── Quick Action Button ───────────────────────────────────────
@@ -40,20 +41,20 @@ function QuickAction({
   accentColor = "var(--accent)",
   delay = 0,
 }: {
-  href: string
-  icon: React.ElementType
-  label: string
-  description: string
-  accentColor?: string
-  delay?: number
+  href: string;
+  icon: React.ElementType;
+  label: string;
+  description: string;
+  accentColor?: string;
+  delay?: number;
 }) {
   return (
     <Link
       href={href}
       className={`group flex items-center gap-4 p-4 transition-all duration-200 anim-fade-up delay-${delay}`}
       style={{
-        backgroundColor: 'var(--bg-elevated)',
-        border: '1px solid var(--border-subtle)',
+        backgroundColor: "var(--bg-elevated)",
+        border: "1px solid var(--border-subtle)",
       }}
     >
       <div
@@ -65,11 +66,14 @@ function QuickAction({
       <div className="flex-1 min-w-0">
         <div
           className="text-sm font-semibold"
-          style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
+          style={{
+            color: "var(--text-primary)",
+            fontFamily: "var(--font-display)",
+          }}
         >
           {label}
         </div>
-        <div className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+        <div className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
           {description}
         </div>
       </div>
@@ -79,46 +83,51 @@ function QuickAction({
         style={{ color: accentColor }}
       />
     </Link>
-  )
+  );
 }
 
 // ── Page ─────────────────────────────────────────────────────
 export default async function DashboardPage() {
-  const stats = await getDashboardStats()
-  const recentOrders = await getRecentOrders()
+  const stats = await getDashboardStats();
+  const recentOrders = await getRecentOrders();
 
-  const activeOrders = stats.totalOrders - stats.completedOrders
+  const activeOrders = stats.totalOrders - stats.completedOrders;
 
   return (
-    <div className="min-h-full" style={{ backgroundColor: 'var(--bg-base)', padding: '2rem' }}>
-
+    <div
+      className="min-h-full p-4 sm:p-8"
+      style={{ backgroundColor: "var(--bg-base)" }}
+    >
       {/* ── Page Header ─────────────────────────────────── */}
-      <header className="flex items-end justify-between mb-8 anim-fade-in">
+      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 anim-fade-in">
         <div>
           <p
-            className="text-xs font-semibold tracking-widest uppercase mb-1"
-            style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
+            className="text-base sm:text-xs font-semibold tracking-widest uppercase mb-1"
+            style={{ color: "var(--accent)", fontFamily: "var(--font-mono)" }}
           >
             Overview
           </p>
           <h1
-            className="text-4xl font-bold leading-none"
-            style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
+            className="text-4xl sm:text-5xl font-bold leading-none"
+            style={{
+              fontFamily: "var(--font-display)",
+              color: "var(--text-primary)",
+            }}
           >
             Dashboard
           </h1>
-          <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>
+          <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
             {format(new Date(), "EEEE, MMMM d, yyyy")}
           </p>
         </div>
         <Link
           href="/orders/new"
-          className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 hover:opacity-90 active:scale-95"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold transition-all duration-200 hover:opacity-90 active:scale-95 w-full sm:w-auto"
           style={{
-            backgroundColor: 'var(--accent)',
-            color: '#080C14',
-            fontFamily: 'var(--font-display)',
-            border: '1px solid white',
+            backgroundColor: "var(--accent)",
+            color: "#080C14",
+            fontFamily: "var(--font-display)",
+            border: "1px solid white",
           }}
         >
           <Plus size={16} strokeWidth={2.5} />
@@ -127,7 +136,10 @@ export default async function DashboardPage() {
       </header>
 
       {/* ── Revenue Period Selector ─────────────────────────────────── */}
-      <section className="grid grid-cols-1 gap-px mb-px" aria-label="Revenue Summary">
+      <section
+        className="grid grid-cols-1 gap-px mb-px"
+        aria-label="Revenue Summary"
+      >
         <RevenuePeriodSelector
           weeklyRevenue={stats.weeklyRevenue}
           monthlyRevenue={stats.monthlyRevenue}
@@ -135,30 +147,33 @@ export default async function DashboardPage() {
           weeklyOrders={stats.weeklyOrders}
           monthlyOrders={stats.monthlyOrders}
           yearlyOrders={stats.yearlyOrders}
+          pendingPayments={stats.pendingPayments}
         />
       </section>
 
       {/* ── Content Grid ────────────────────────────────── */}
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-
         {/* Recent Orders Table — takes 2/3 */}
         <section
           className="lg:col-span-2 anim-fade-up delay-4"
           style={{
-            backgroundColor: 'var(--bg-surface)',
-            border: '1px solid var(--border-subtle)',
+            backgroundColor: "var(--bg-surface)",
+            border: "1px solid var(--border-subtle)",
           }}
         >
           {/* Section Header */}
           <div
             className="flex items-center justify-between px-6 py-4"
-            style={{ borderBottom: '1px solid var(--border-subtle)' }}
+            style={{ borderBottom: "1px solid var(--border-subtle)" }}
           >
             <div className="flex items-center gap-2">
-              <TrendingUp size={15} style={{ color: 'var(--accent)' }} />
+              <TrendingUp size={15} style={{ color: "var(--accent)" }} />
               <h2
                 className="text-sm font-semibold"
-                style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
+                style={{
+                  fontFamily: "var(--font-display)",
+                  color: "var(--text-primary)",
+                }}
               >
                 Recent Orders
               </h2>
@@ -166,7 +181,7 @@ export default async function DashboardPage() {
             <Link
               href="/orders"
               className="flex items-center gap-1 text-xs font-medium transition-colors duration-150"
-              style={{ color: 'var(--text-muted)' }}
+              style={{ color: "var(--text-muted)" }}
             >
               View all
               <ArrowUpRight size={12} />
@@ -176,23 +191,37 @@ export default async function DashboardPage() {
           {/* Table */}
           <div className="overflow-x-auto hidden md:block">
             {recentOrders.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16" style={{ color: 'var(--text-muted)' }}>
-                <ShoppingCart size={32} strokeWidth={1} className="mb-3 opacity-40" />
+              <div
+                className="flex flex-col items-center justify-center py-16"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <ShoppingCart
+                  size={32}
+                  strokeWidth={1}
+                  className="mb-3 opacity-40"
+                />
                 <p className="text-sm">No orders yet</p>
               </div>
             ) : (
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                    {['Customer', 'Items', 'Date', 'Total', 'Status', ''].map((h) => (
-                      <th
-                        key={h}
-                        className="px-6 py-3 text-left text-xs font-semibold tracking-widest uppercase"
-                        style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
-                      >
-                        {h}
-                      </th>
-                    ))}
+                  <tr
+                    style={{ borderBottom: "1px solid var(--border-subtle)" }}
+                  >
+                    {["Customer", "Items", "Date", "Total", "Status", ""].map(
+                      (h) => (
+                        <th
+                          key={h}
+                          className="px-6 py-3 text-left text-xs font-semibold tracking-widest uppercase"
+                          style={{
+                            color: "var(--text-muted)",
+                            fontFamily: "var(--font-mono)",
+                          }}
+                        >
+                          {h}
+                        </th>
+                      ),
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -200,23 +229,38 @@ export default async function DashboardPage() {
                     <tr
                       key={order.id}
                       className={`group transition-colors duration-100 anim-fade-up delay-${i} hover:bg-[var(--bg-hover)]`}
-                      style={{ borderBottom: '1px solid var(--border-subtle)' }}
+                      style={{ borderBottom: "1px solid var(--border-subtle)" }}
                     >
-                      <td className="px-6 py-4 font-medium" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>
+                      <td
+                        className="px-6 py-4 font-medium"
+                        style={{
+                          color: "var(--text-primary)",
+                          fontFamily: "var(--font-display)",
+                        }}
+                      >
                         {order.customerName}
                       </td>
-                      <td className="px-6 py-4" style={{ color: 'var(--text-secondary)' }}>
+                      <td
+                        className="px-6 py-4"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         {order.items.length}
                       </td>
                       <td
                         className="px-6 py-4 text-xs"
-                        style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
+                        style={{
+                          color: "var(--text-muted)",
+                          fontFamily: "var(--font-mono)",
+                        }}
                       >
-                        {format(order.createdAt, 'MMM d, yyyy')}
+                        {format(order.createdAt, "MMM d, yyyy")}
                       </td>
                       <td
                         className="px-6 py-4 font-semibold"
-                        style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
+                        style={{
+                          color: "var(--accent)",
+                          fontFamily: "var(--font-mono)",
+                        }}
                       >
                         R{order.grandTotal.toFixed(2)}
                       </td>
@@ -227,7 +271,10 @@ export default async function DashboardPage() {
                         <Link
                           href={`/orders/${order.id}`}
                           className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex items-center justify-center w-7 h-7 rounded-sm"
-                          style={{ backgroundColor: 'var(--accent-dim)', color: 'var(--accent)' }}
+                          style={{
+                            backgroundColor: "var(--accent-dim)",
+                            color: "var(--accent)",
+                          }}
                           aria-label={`View order ${order.id}`}
                         >
                           <ArrowUpRight size={13} />
@@ -243,37 +290,65 @@ export default async function DashboardPage() {
           {/* Mobile Card View */}
           <div className="md:hidden">
             {recentOrders.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16" style={{ color: 'var(--text-muted)' }}>
-                <ShoppingCart size={32} strokeWidth={1} className="mb-3 opacity-40" />
+              <div
+                className="flex flex-col items-center justify-center py-16"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <ShoppingCart
+                  size={32}
+                  strokeWidth={1}
+                  className="mb-3 opacity-40"
+                />
                 <p className="text-sm">No orders yet</p>
               </div>
             ) : (
-              <div className="divide-y" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+              <div style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                 {recentOrders.map((order, i) => (
                   <Link
                     key={order.id}
                     href={`/orders/${order.id}`}
                     className={`flex items-center justify-between p-4 transition-colors duration-100 hover:bg-[var(--bg-hover)]`}
-                    style={{ borderBottom: '1px solid var(--border-subtle)' }}
+                    style={{ borderBottom: "1px solid var(--border-subtle)" }}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium truncate" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>
+                        <span
+                          className="font-medium truncate"
+                          style={{
+                            color: "var(--text-primary)",
+                            fontFamily: "var(--font-display)",
+                          }}
+                        >
                           {order.customerName}
                         </span>
                         <StatusBadge status={order.status} />
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                        <span
+                          className="text-xs"
+                          style={{ color: "var(--text-muted)" }}
+                        >
                           {order.items.length} items
                         </span>
-                        <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                          {format(order.createdAt, 'MMM d, yyyy')}
+                        <span
+                          className="text-xs"
+                          style={{
+                            color: "var(--text-muted)",
+                            fontFamily: "var(--font-mono)",
+                          }}
+                        >
+                          {format(order.createdAt, "MMM d, yyyy")}
                         </span>
                       </div>
                     </div>
                     <div className="ml-4 flex-shrink-0">
-                      <span className="font-semibold" style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>
+                      <span
+                        className="font-semibold"
+                        style={{
+                          color: "var(--accent)",
+                          fontFamily: "var(--font-mono)",
+                        }}
+                      >
                         R{order.grandTotal.toFixed(2)}
                       </span>
                     </div>
@@ -288,11 +363,14 @@ export default async function DashboardPage() {
         <section className="anim-fade-up delay-5">
           <div
             className="mb-4 pb-3"
-            style={{ borderBottom: '1px solid var(--border-subtle)' }}
+            style={{ borderBottom: "1px solid var(--border-subtle)" }}
           >
             <p
               className="text-xs font-semibold tracking-widest uppercase"
-              style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
+              style={{
+                color: "var(--text-muted)",
+                fontFamily: "var(--font-mono)",
+              }}
             >
               Quick Actions
             </p>
@@ -328,31 +406,54 @@ export default async function DashboardPage() {
           <div
             className="mt-6 p-4"
             style={{
-              backgroundColor: 'var(--bg-elevated)',
-              border: '1px solid var(--border-subtle)',
-              borderLeft: '3px solid var(--accent)',
+              backgroundColor: "var(--bg-elevated)",
+              border: "1px solid var(--border-subtle)",
+              borderLeft: "3px solid var(--accent)",
             }}
           >
             <p
               className="text-xs font-semibold tracking-widest uppercase mb-3"
-              style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
+              style={{
+                color: "var(--text-muted)",
+                fontFamily: "var(--font-mono)",
+              }}
             >
               Pipeline
             </p>
             <div className="space-y-2">
               {[
-                { label: 'To Buy', value: stats.ordersToBuy, color: 'var(--warning)' },
-                { label: 'Active', value: activeOrders, color: 'var(--success)' },
-                { label: 'Unpaid', value: stats.pendingPayments, color: 'var(--danger)' },
+                {
+                  label: "To Buy",
+                  value: stats.ordersToBuy,
+                  color: "var(--warning)",
+                },
+                {
+                  label: "Active",
+                  value: activeOrders,
+                  color: "var(--success)",
+                },
+                {
+                  label: "Unpaid",
+                  value: stats.pendingPayments,
+                  color: "var(--danger)",
+                },
               ].map(({ label, value, color }) => (
                 <div key={label} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
-                    <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>{label}</span>
+                    <div
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: color }}
+                    />
+                    <span
+                      className="text-xs"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {label}
+                    </span>
                   </div>
                   <span
                     className="text-xs font-bold"
-                    style={{ color, fontFamily: 'var(--font-mono)' }}
+                    style={{ color, fontFamily: "var(--font-mono)" }}
                   >
                     {value}
                   </span>
@@ -363,5 +464,5 @@ export default async function DashboardPage() {
         </section>
       </div>
     </div>
-  )
+  );
 }

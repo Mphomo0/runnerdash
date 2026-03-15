@@ -4,24 +4,23 @@ import { api } from "./convex/_generated/api";
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
-const isPublicRoute = createRouteMatcher([
-  "/login(.*)",
-  "/unauthorized(.*)",
-]);
+const isPublicRoute = createRouteMatcher(["/login(.*)", "/unauthorized(.*)"]);
 
 const isProtectedRoute = createRouteMatcher(["/(dashboard)(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
     const { userId } = await auth();
-    
+
     if (!userId) {
       const { redirectToSignIn } = await auth();
       return redirectToSignIn({ returnBackUrl: req.url });
     }
 
-    const isAdmin = await convex.query(api.auth.isAdmin, { clerkUserId: userId });
-    
+    const isAdmin = await convex.query(api.auth.isAdmin, {
+      clerkUserId: userId,
+    });
+
     if (!isAdmin) {
       const url = new URL(req.url);
       url.pathname = "/unauthorized";

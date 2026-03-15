@@ -6,7 +6,9 @@ export const isAdmin = query({
   handler: async (ctx, args) => {
     const admin = await ctx.db
       .query("admins")
-      .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", args.clerkUserId))
+      .withIndex("by_clerk_user_id", (q) =>
+        q.eq("clerkUserId", args.clerkUserId),
+      )
       .first();
     return !!admin;
   },
@@ -17,7 +19,9 @@ export const getAdmin = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("admins")
-      .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", args.clerkUserId))
+      .withIndex("by_clerk_user_id", (q) =>
+        q.eq("clerkUserId", args.clerkUserId),
+      )
       .first();
   },
 });
@@ -30,7 +34,9 @@ export const createAdmin = mutation({
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("admins")
-      .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", args.clerkUserId))
+      .withIndex("by_clerk_user_id", (q) =>
+        q.eq("clerkUserId", args.clerkUserId),
+      )
       .first();
 
     if (existing) {
@@ -50,7 +56,9 @@ export const removeAdmin = mutation({
   handler: async (ctx, args) => {
     const admin = await ctx.db
       .query("admins")
-      .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", args.clerkUserId))
+      .withIndex("by_clerk_user_id", (q) =>
+        q.eq("clerkUserId", args.clerkUserId),
+      )
       .first();
 
     if (admin) {

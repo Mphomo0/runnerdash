@@ -1,7 +1,7 @@
-"use server"
+"use server";
 
-import { convex } from "@/lib/convex"
-import { api } from "@/convex/_generated/api"
+import { convex } from "@/lib/convex";
+import { api } from "@/convex/_generated/api";
 
 export async function getDashboardStats() {
   return await convex.query(api.dashboard.getDashboardStats);
