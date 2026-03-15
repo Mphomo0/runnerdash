@@ -30,7 +30,7 @@ export const MobileNav = () => {
       </button>
 
       <span
-        className="ml-3 text-sm font-semibold"
+        className="ml-3 text-lg font-bold"
         style={{ fontFamily: "var(--font-display)", color: "var(--accent)" }}
       >
         Runner Dash

@@ -51,7 +51,11 @@ export function ConfirmDeleteButton({ onDelete }: ConfirmDeleteButtonProps) {
   }
 
   return (
-    <Button variant="destructive" onClick={() => setConfirming(true)}>
+    <Button
+      variant="destructive"
+      onClick={() => setConfirming(true)}
+      className="border-2 border-red-500 hover:bg-red-600"
+    >
       <Trash2 className="mr-2 h-4 w-4" /> Delete
     </Button>
   );

@@ -271,7 +271,7 @@ export default async function RunnerOrdersPage({
       </div>
 
       {/* Mobile Card View */}
-      <div className="md:hidden">
+      <div className="md:hidden space-y-4">
         {orders.length === 0 ? (
           <div
             className="flex flex-col items-center justify-center py-16 rounded-md"
@@ -289,88 +289,85 @@ export default async function RunnerOrdersPage({
             <p className="text-sm">No runner orders found.</p>
           </div>
         ) : (
-          <div
-            className="rounded-md border"
-            style={{
-              backgroundColor: "var(--bg-surface)",
-              borderColor: "var(--border-subtle)",
-            }}
-          >
-            <div style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-              {orders.map((order) => (
-                <Link
-                  key={order.id}
-                  href={`/runner-orders/${order.id}`}
-                  className="flex items-center justify-between p-4 transition-colors duration-100 hover:bg-[var(--bg-hover)]"
-                  style={{ borderBottom: "1px solid var(--border-subtle)" }}
+          orders.map((order) => (
+            <Link
+              key={order.id}
+              href={`/runner-orders/${order.id}`}
+              className="block p-4 rounded-md border transition-colors duration-100 hover:bg-[var(--bg-hover)]"
+              style={{
+                backgroundColor: "var(--bg-surface)",
+                borderColor: "var(--border-subtle)",
+              }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span
+                  className="font-medium"
+                  style={{
+                    color: "var(--text-primary)",
+                    fontFamily: "var(--font-display)",
+                  }}
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <span
-                        className="font-medium truncate"
-                        style={{
-                          color: "var(--text-primary)",
-                          fontFamily: "var(--font-display)",
-                        }}
-                      >
-                        {order.customerName}
-                      </span>
-                      <StatusBadge status={order.status} />
-                    </div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span
-                        className="text-xs"
-                        style={{ color: "var(--text-muted)" }}
-                      >
-                        {order.items.length} items
-                      </span>
-                      <span
-                        className="text-xs"
-                        style={{
-                          color: "var(--text-muted)",
-                          fontFamily: "var(--font-mono)",
-                        }}
-                      >
-                        {format(order.createdAt, "MMM d, yyyy")}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant={
-                          order.runnerFeePaid ? "success" : "destructive"
-                        }
-                        className="text-[10px] px-1 py-0"
-                      >
-                        Fee: {order.runnerFeePaid ? "Paid" : "Unpaid"}
-                      </Badge>
-                      <Badge
-                        variant={order.itemsPaid ? "success" : "destructive"}
-                        className="text-[10px] px-1 py-0"
-                      >
-                        Items: {order.itemsPaid ? "Paid" : "Unpaid"}
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                    <span
-                      className="font-semibold"
-                      style={{
-                        color: "var(--accent)",
-                        fontFamily: "var(--font-mono)",
-                      }}
-                    >
-                      R{order.grandTotal.toFixed(2)}
-                    </span>
-                    <ArrowUpRight
-                      size={14}
-                      className="ml-2 inline-block"
-                      style={{ color: "var(--text-muted)" }}
-                    />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
+                  Order {order.id.slice(-6)}
+                </span>
+                <StatusBadge status={order.status} />
+              </div>
+              <div className="mb-3">
+                <span
+                  className="font-medium"
+                  style={{
+                    color: "var(--text-primary)",
+                  }}
+                >
+                  {order.customerName}
+                </span>
+              </div>
+              <div className="flex items-center justify-between mb-3">
+                <span
+                  className="text-sm"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  {order.items.length} items
+                </span>
+                <span
+                  className="text-sm"
+                  style={{
+                    color: "var(--text-muted)",
+                    fontFamily: "var(--font-mono)",
+                  }}
+                >
+                  {format(order.createdAt, "MMM d, yyyy")}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2 mb-3">
+                <Badge
+                  variant={order.runnerFeePaid ? "success" : "destructive"}
+                  className="text-xs"
+                >
+                  Fee: {order.runnerFeePaid ? "Paid" : "Unpaid"}
+                </Badge>
+                <Badge
+                  variant={order.itemsPaid ? "success" : "destructive"}
+                  className="text-xs"
+                >
+                  Items: {order.itemsPaid ? "Paid" : "Unpaid"}
+                </Badge>
+              </div>
+              <div
+                className="flex items-center justify-end pt-2 border-t"
+                style={{ borderColor: "var(--border-subtle)" }}
+              >
+                <span
+                  className="font-semibold text-lg"
+                  style={{
+                    color: "var(--accent)",
+                    fontFamily: "var(--font-mono)",
+                  }}
+                >
+                  R{order.grandTotal.toFixed(2)}
+                </span>
+              </div>
+            </Link>
+          ))
         )}
       </div>
     </div>

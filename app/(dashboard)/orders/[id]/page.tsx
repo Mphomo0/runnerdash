@@ -37,17 +37,19 @@ export default async function OrderDetailsPage({
   }
 
   return (
-    <div className="p-8 space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center space-x-4">
           <Link href="/orders">
             <Button variant="ghost" size="icon" type="button">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
-          <h2 className="text-3xl font-bold tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
             Order {order.id.slice(-6)}
           </h2>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
           <Badge
             variant={
               order.status === "COMPLETED"
@@ -56,13 +58,18 @@ export default async function OrderDetailsPage({
                   ? "warning"
                   : "secondary"
             }
+            className="w-full sm:w-auto justify-center"
           >
             {order.status}
           </Badge>
         </div>
-        <div className="flex items-center space-x-2">
-          <Link href={`/orders/${order.id}/edit`}>
-            <Button variant="outline" type="button">
+        <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2">
+          <Link href={`/orders/${order.id}/edit`} className="block sm:inline">
+            <Button
+              variant="outline"
+              type="button"
+              className="w-full sm:w-auto"
+            >
               <Edit className="mr-2 h-4 w-4" /> Edit
             </Button>
           </Link>
@@ -393,6 +400,8 @@ export default async function OrderDetailsPage({
                 <span style={{ color: "var(--text-secondary)" }}>
                   Items Total
                 </span>
+              </div>
+              <div className="flex justify-between mb-2">
                 <span
                   style={{
                     color: "var(--text-primary)",
