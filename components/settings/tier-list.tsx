@@ -9,14 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Trash2, Plus, Pencil, Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -103,21 +95,19 @@ export function TierList({ initialTiers }: { initialTiers: Tier[] }) {
           <CardTitle>Current Fee Tiers</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Min Items</TableHead>
-                <TableHead>Max Items</TableHead>
-                <TableHead>Fee (R)</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {initialTiers.map((tier) => (
-                <TableRow key={tier.id}>
-                  {editingId === tier.id ? (
-                    <>
-                      <TableCell>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {initialTiers.map((tier) => (
+              <div
+                key={tier.id}
+                className="rounded-lg border bg-card p-4 shadow-sm"
+              >
+                {editingId === tier.id ? (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1">
+                        <label className="text-xs text-muted-foreground">
+                          Min Items
+                        </label>
                         <Input
                           type="number"
                           min="0"
@@ -128,10 +118,13 @@ export function TierList({ initialTiers }: { initialTiers: Tier[] }) {
                               minItems: parseInt(e.target.value),
                             })
                           }
-                          className="w-20"
+                          className="h-8"
                         />
-                      </TableCell>
-                      <TableCell>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs text-muted-foreground">
+                          Max Items
+                        </label>
                         <Input
                           type="number"
                           min="0"
@@ -142,87 +135,92 @@ export function TierList({ initialTiers }: { initialTiers: Tier[] }) {
                               maxItems: parseInt(e.target.value),
                             })
                           }
-                          className="w-20"
+                          className="h-8"
                         />
-                      </TableCell>
-                      <TableCell>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          value={editData.feeAmount}
-                          onChange={(e) =>
-                            setEditData({
-                              ...editData,
-                              feeAmount: parseFloat(e.target.value),
-                            })
-                          }
-                          className="w-24"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleSave(tier.id)}
-                            disabled={loading}
-                            className="text-green-500 hover:text-green-700"
-                          >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={handleCancel}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </>
-                  ) : (
-                    <>
-                      <TableCell>{tier.minItems}</TableCell>
-                      <TableCell>{tier.maxItems}</TableCell>
-                      <TableCell>R{tier.feeAmount.toFixed(2)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(tier)}
-                            className="text-blue-500 hover:text-blue-700"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(tier.id)}
-                            className="text-red-500 hover:text-red-700 hover:bg-red-100"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </>
-                  )}
-                </TableRow>
-              ))}
-              {initialTiers.length === 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={4}
-                    className="text-center text-muted-foreground"
-                  >
-                    No tiers defined.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs text-muted-foreground">
+                        Fee (R)
+                      </label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={editData.feeAmount}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            feeAmount: parseFloat(e.target.value),
+                          })
+                        }
+                        className="h-8"
+                      />
+                    </div>
+                    <div className="flex justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleSave(tier.id)}
+                        disabled={loading}
+                        className="h-8 w-8 text-green-500 hover:text-green-700"
+                      >
+                        <Check className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleCancel}
+                        className="h-8 w-8 text-red-500 hover:text-red-700"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">
+                        Items
+                      </span>
+                      <span className="font-medium">
+                        {tier.minItems} - {tier.maxItems}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Fee</span>
+                      <span className="font-semibold">
+                        R{tier.feeAmount.toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="flex justify-end gap-1 pt-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEdit(tier)}
+                        className="h-8 w-8 text-blue-500 hover:text-blue-700"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(tier.id)}
+                        className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-100"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          {initialTiers.length === 0 && (
+            <p className="text-center text-muted-foreground py-4">
+              No tiers defined.
+            </p>
+          )}
         </CardContent>
       </Card>
 
