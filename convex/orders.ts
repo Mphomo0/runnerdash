@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
-// Helper to calculate fees (matching what was in the Server Action)
+// Helper to calculate totals (no runner fee for regular orders)
 const calculateOrderTotals = async (
   ctx: any,
   items: { price: number; quantity: number }[],
@@ -10,31 +10,11 @@ const calculateOrderTotals = async (
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
-  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-
-  const tiers = await ctx.db.query("runnerFeeTiers").collect();
-  const tier = tiers.find(
-    (t: any) => totalQuantity >= t.minItems && totalQuantity <= t.maxItems,
-  );
-
-  let runnerFee = 0;
-  if (totalQuantity > 0) {
-    if (tier) {
-      runnerFee = tier.feeAmount;
-    } else {
-      const highestTier = [...tiers].sort(
-        (a: any, b: any) => b.maxItems - a.maxItems,
-      )[0];
-      if (highestTier && totalQuantity > highestTier.maxItems) {
-        runnerFee = highestTier.feeAmount;
-      }
-    }
-  }
 
   return {
     itemsTotal,
-    runnerFee,
-    grandTotal: itemsTotal + runnerFee,
+    runnerFee: 0,
+    grandTotal: itemsTotal,
   };
 };
 

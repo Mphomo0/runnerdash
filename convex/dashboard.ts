@@ -47,7 +47,7 @@ export const getDashboardStats = query({
     // Calculate revenue for regular orders (using grandTotal)
     const ordersRevenue = orders
       .filter((o) => o.itemsPaid && o.runnerFeePaid)
-      .reduce((sum, o) => sum + o.grandTotal, 0);
+      .reduce((sum, o) => sum + o.itemsTotal, 0);
 
     const totalRevenue = runnerRevenue + ordersRevenue;
 
@@ -213,7 +213,7 @@ export const getDashboardStats = query({
       .filter((o) => o.itemsPaid && o.runnerFeePaid)
       .forEach((o) => {
         const date = new Date(o._creationTime);
-        const revenue = o.grandTotal;
+        const revenue = o.itemsTotal;
 
         // Weekly (only for current month)
         if (
