@@ -8,8 +8,10 @@ export async function getDashboardStats() {
 }
 
 export async function getRecentOrders() {
-  const orders = await convex.query(api.orders.getOrders, {});
-  const runnerOrders = await convex.query(api.runnerOrders.getRunnerOrders, {});
+  const [orders, runnerOrders] = await Promise.all([
+    convex.query(api.orders.getOrders, {}),
+    convex.query(api.runnerOrders.getRunnerOrders, {}),
+  ]);
 
   const combined = [...orders, ...runnerOrders]
     .sort((a, b) => b.createdAt - a.createdAt)

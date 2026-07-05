@@ -88,8 +88,10 @@ function QuickAction({
 
 // ── Page ─────────────────────────────────────────────────────
 export default async function DashboardPage() {
-  const stats = await getDashboardStats();
-  const recentOrders = await getRecentOrders();
+  const [stats, recentOrders] = await Promise.all([
+    getDashboardStats(),
+    getRecentOrders(),
+  ]);
 
   const activeOrders = stats.totalOrders - stats.completedOrders;
 
